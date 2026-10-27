@@ -697,7 +697,7 @@ function PlanosV2Page() {
               {isFoodOnlyMode && (
                 <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                   <Link
-                    to="/dominus-food"
+                    to="/sistema-para-boteco"
                     className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface-subtle px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:border-[#FC4242]/40 hover:text-[#FC4242] active:scale-[0.98]"
                   >
                     <ArrowLeft size={13} aria-hidden="true" />

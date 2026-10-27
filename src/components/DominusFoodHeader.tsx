@@ -15,7 +15,7 @@ export function DominusFoodHeader({
       <div className="landing-page-container flex min-h-[68px] sm:min-h-[76px] lg:min-h-[84px] items-center justify-between gap-2 sm:gap-4 py-2.5 sm:py-3">
         {/* Lado esquerdo: Logotipo oficial Dominus Food mantendo proporção original */}
         <a
-          href="/dominus-food"
+          href="/"
           aria-label="Dominus Food — Início"
           className="flex items-center shrink-0 transition-opacity hover:opacity-90"
         >

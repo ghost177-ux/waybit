@@ -428,7 +428,7 @@ export function Header({ currentPath = "/" }: HeaderProps) {
                     {foodSegments.slice(0, 6).map((item) => (
                       <Link
                         key={item.name}
-                        to="/planos"
+                        to={item.name === "Boteco" ? "/sistema-para-boteco" : "/planos"}
                         onClick={() => setMegaMenuOpen(false)}
                         className="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl fluid-caption font-semibold text-slate-700 dark:text-zinc-200 hover:text-[#FC4242] hover:bg-rose-50/80 dark:hover:bg-rose-950/25 transition-all duration-150 hover:translate-x-1"
                       >
@@ -590,7 +590,7 @@ export function Header({ currentPath = "/" }: HeaderProps) {
                         {foodSegments.map((item) => (
                           <Link
                             key={item.name}
-                            to="/planos"
+                            to={item.name === "Boteco" ? "/sistema-para-boteco" : "/planos"}
                             onClick={() => setMenuOpen(false)}
                             className="flex items-center gap-2 py-1.5 px-2.5 fluid-caption text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/50 transition-colors"
                           >
