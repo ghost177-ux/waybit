@@ -193,6 +193,51 @@
   padding-inline: var(--page-gutter);
 }
 
+/* Gutter exclusivo da Landing Page Dominus Food, sem afetar outros usos globais. */
+.dominus-food-page {
+  --page-gutter: 3%;
+}
+
+@media (min-width: 540px) {
+  .dominus-food-page {
+    --page-gutter: 5%;
+  }
+}
+
+@media (min-width: 1440px) {
+  .dominus-food-page {
+    --page-gutter: 8%;
+  }
+}
+
+@media (min-width: 1985px) {
+  .dominus-food-page {
+    --page-gutter: calc(clamp(0, calc((2120px - 100vw) / 135px), 1) * 8%);
+  }
+}
+
+@media (min-width: 2120px) {
+  .dominus-food-page {
+    --page-gutter: 0%;
+  }
+}
+
+@media (min-width: 1440px) {
+  .dominus-food-page .landing-page-container {
+    width: clamp(80%, calc(116.42201835% - 524.47614679px), 90%);
+  }
+}
+
+.dominus-food-page .success-story-card {
+  width: 100%;
+}
+
+@media (min-width: 771px) {
+  .dominus-food-page .success-story-card {
+    width: 90%;
+  }
+}
+
 @utility fluid-gutter {
   padding-inline: var(--page-gutter);
 }

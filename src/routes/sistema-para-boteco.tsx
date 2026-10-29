@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
   Utensils,
@@ -279,21 +279,79 @@ const foodVideoCases = [
     id: "casa-da-praia",
     cliente: "Casa da Praia",
     videoId: "dxQTaUwfZWQ",
-    texto: "O sistema trouxe muita facilidade no atendimento às mesas e agilizou o fluxo de pedidos no rush de fim de semana.",
+    texto: "O Dominus tem facilitado muito a nossa vida no dia a dia, e graças a Deus hoje a gente conta com a praticidade do totem.",
   },
   {
     id: "p22",
     cliente: "P22",
     videoId: "He5moVQ96GE",
-    texto: "O fechamento de contas direto nas maquininhas e a clareza dos relatórios facilitaram muito a conferência e o fechamento de caixa.",
+    texto: "Depois que começamos a usar o sistema ficou mil maravilhas, pois qualquer informação importante a gente tem prontamente.",
   },
   {
     id: "casa-do-surf",
     cliente: "Casa do Surf",
     videoId: "cZRXF6gSmCg",
-    texto: "Conheça a experiência da operação com o Dominus Food.",
+    texto: "O sistema para a gente foi uma verdadeira mão na roda na operação, sinceramente eu não sei mais como trabalhar sem ele.",
   },
 ];
+
+// Comparativo comercial baseado nos diferenciais documentados para o Dominus Food.
+const comparativoSistemas = {
+  outros: [
+    {
+      titulo: "Delivery em outra tela",
+      descricao: "Sem integração, pedidos podem exigir lançamento manual e aumentar o retrabalho.",
+    },
+    {
+      titulo: "Estoque com pouca visibilidade",
+      descricao: "Entradas, saídas e reposições ficam mais difíceis de acompanhar.",
+    },
+    {
+      titulo: "Comandas no papel",
+      descricao: "Pedidos podem se perder ou chegar incompletos no movimento do salão.",
+    },
+    {
+      titulo: "Informações espalhadas",
+      descricao: "Caixa, operação e resultados precisam ser conferidos em lugares diferentes.",
+    },
+    {
+      titulo: "PDV pouco flexível",
+      descricao: "Um fluxo lento no caixa pode atrapalhar o atendimento nos horários de pico.",
+    },
+    {
+      titulo: "Salão e cozinha desconectados",
+      descricao: "A equipe depende de repasses manuais para encaminhar os pedidos.",
+    },
+  ],
+  dominus: [
+    {
+      titulo: "Delivery centralizado",
+      descricao:
+        "Integração com iFood e Bitfood para concentrar os pedidos, conforme a configuração contratada.",
+    },
+    {
+      titulo: "Estoque acompanhado",
+      descricao:
+        "Controle de entradas, saídas e consumo, com alertas de reposição e gestão de combos.",
+    },
+    {
+      titulo: "Comandas digitais",
+      descricao: "Registro dos pedidos pelo garçom e acompanhamento do consumo por mesa.",
+    },
+    {
+      titulo: "Gestão com mais clareza",
+      descricao: "Relatórios detalhados e informações operacionais e financeiras em tempo real.",
+    },
+    {
+      titulo: "PDV pensado para a rotina",
+      descricao: "Fluxo de venda apresentado como rápido e intuitivo, integrado ao caixa.",
+    },
+    {
+      titulo: "Operação conectada",
+      descricao: "Pedidos do salão podem ser encaminhados à cozinha em um mesmo fluxo.",
+    },
+  ],
+};
 
 // ─── FAQ COMPLETO (Seção 8 da documentação) ──────────────────────────────────
 const faqs = [
@@ -472,9 +530,10 @@ function DominusFoodPage() {
   const [billingCycle, setBillingCycle] = useState<"anual" | "mensal">("anual");
   const [activeFaqIndex, setActiveFaqIndex] = useState(0);
   const [activeRotinaTab, setActiveRotinaTab] = useState(0);
-  const [activeFoodCaseIndex, setActiveFoodCaseIndex] = useState(0);
-  const [isFoodCasesPaused, setIsFoodCasesPaused] = useState(false);
   const [activeFoodVideo, setActiveFoodVideo] = useState<(typeof foodVideoCases)[number] | null>(null);
+  const [isSuccessStoriesDesktop, setIsSuccessStoriesDesktop] = useState(false);
+  const [successStoryContentHeight, setSuccessStoryContentHeight] = useState<number | null>(null);
+  const successStoryContentRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   // Carrega o script de incorporação do Full Funnel de forma controlada sem duplicação
   useEffect(() => {
@@ -488,16 +547,6 @@ function DominusFoodPage() {
       document.body.appendChild(script);
     }
   }, []);
-
-  useEffect(() => {
-    if (isFoodCasesPaused || activeFoodVideo) return;
-
-    const rotation = window.setInterval(() => {
-      setActiveFoodCaseIndex((current) => (current + 1) % foodVideoCases.length);
-    }, 5000);
-
-    return () => window.clearInterval(rotation);
-  }, [activeFoodVideo, isFoodCasesPaused]);
 
   useEffect(() => {
     if (!activeFoodVideo) return;
@@ -516,6 +565,67 @@ function DominusFoodPage() {
     };
   }, [activeFoodVideo]);
 
+  useEffect(() => {
+    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateDesktopLayout = () => setIsSuccessStoriesDesktop(desktopMediaQuery.matches);
+
+    updateDesktopLayout();
+    desktopMediaQuery.addEventListener("change", updateDesktopLayout);
+
+    return () => desktopMediaQuery.removeEventListener("change", updateDesktopLayout);
+  }, []);
+
+  useEffect(() => {
+    if (!isSuccessStoriesDesktop) {
+      setSuccessStoryContentHeight(null);
+      return;
+    }
+
+    const contentElements = successStoryContentRefs.current.filter(
+      (element): element is HTMLDivElement => element !== null,
+    );
+
+    if (contentElements.length === 0) return;
+
+    let animationFrameId: number | null = null;
+
+    const measureNaturalHeights = () => {
+      const previousMinHeights = contentElements.map((element) => element.style.minHeight);
+
+      contentElements.forEach((element) => {
+        element.style.minHeight = "0px";
+      });
+
+      const tallestNaturalHeight = Math.ceil(
+        Math.max(...contentElements.map((element) => element.scrollHeight)),
+      );
+
+      contentElements.forEach((element, index) => {
+        element.style.minHeight = previousMinHeights[index];
+      });
+
+      setSuccessStoryContentHeight((currentHeight) =>
+        currentHeight === tallestNaturalHeight ? currentHeight : tallestNaturalHeight,
+      );
+    };
+
+    const scheduleMeasurement = () => {
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(measureNaturalHeights);
+    };
+
+    const resizeObserver = new ResizeObserver(scheduleMeasurement);
+    contentElements.forEach((element) => resizeObserver.observe(element));
+    window.addEventListener("resize", scheduleMeasurement);
+    scheduleMeasurement();
+
+    return () => {
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", scheduleMeasurement);
+    };
+  }, [isSuccessStoriesDesktop]);
+
   const toggleFaq = (index: number) => {
     setActiveFaqIndex(index);
   };
@@ -528,33 +638,16 @@ function DominusFoodPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground">
+    <div className="dominus-food-page flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground">
       {/* ─── CONTÊINER UNIFICADO HEADER + HERO ─── */}
       <div
         className="relative w-full overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #120303 0%, #1f0707 35%, #2a0a0a 65%, #120303 100%)",
+            "radial-gradient(72% 68% at 84% 28%, rgba(252, 66, 66, 0.34) 0%, rgba(168, 30, 35, 0.18) 38%, transparent 68%), radial-gradient(58% 62% at 10% 88%, rgba(221, 51, 55, 0.24) 0%, transparent 65%), linear-gradient(135deg, rgb(48, 9, 12) 0%, rgb(72, 16, 20) 38%, rgb(45, 9, 13) 68%, rgb(25, 5, 7) 100%)",
         }}
       >
         {/* Luzes e gradientes sutis de ambientação de boteco abrangendo Header e Hero */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse 70% 60% at 80% 30%, rgba(252,66,66,0.22) 0%, transparent 65%)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse 55% 45% at 15% 80%, rgba(252,66,66,0.12) 0%, transparent 60%)",
-          }}
-        />
-
         {/* Header exclusivo para Dominus Food com fundo transparente integrado */}
         <DominusFoodHeader
           onOpenSpecialist={() => setSpecialistOpen(true)}
@@ -564,10 +657,10 @@ function DominusFoodPage() {
         {/* ─── 1. HERO SECTION ─── */}
         <section
           id="hero-dominus-food"
-          className="relative w-full pt-[60px] pb-14 sm:pb-20 lg:pb-28"
+          className="relative w-full pt-12 pb-14 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-28"
         >
           <div className="landing-page-container relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-8">
               {/* Lado Esquerdo: Mensagem e Ação */}
               <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
                 {/* Badge de posicionamento */}
@@ -585,13 +678,13 @@ function DominusFoodPage() {
                 </h1>
 
                 {/* Subtítulo orientativo */}
-                <p className="mt-5 sm:mt-6 fluid-body-lg text-white/80 leading-relaxed max-w-2xl">
+                <p className="mt-5 sm:mt-6 fluid-body-lg text-white leading-relaxed max-w-2xl">
                   Se a correria do dia a dia decide por você, quem está realmente no comando? Chega de apagar incêndios e trabalhar sem saber para onde vai o dinheiro. Está na hora de assumir o controle do seu boteco.
                 </p>
               </div>
 
               {/* Lado Direito: Formulário Oficial Full Funnel Dominus Food */}
-              <div className="lg:col-span-5 relative flex w-full flex-col items-center justify-center lg:self-stretch">
+              <div className="relative flex w-full flex-col items-center justify-center lg:col-span-5 lg:items-end lg:self-stretch">
                 {/* Card branco com bordas de 30px e sombra externa vermelha baseada em #FC4242 */}
                 <div
                   className="relative w-full max-w-[500px] rounded-[30px] overflow-hidden border-0 pt-[25px]"
@@ -632,7 +725,7 @@ function DominusFoodPage() {
                   decoding="async"
                 />
               </div>
-              <div className="flex h-full min-w-0 flex-col items-start justify-center gap-5 text-left lg:col-span-5 lg:mx-auto lg:w-full lg:max-w-[500px]">
+              <div className="flex h-full min-w-0 flex-col items-start justify-center gap-5 text-left lg:col-span-5 lg:ml-auto lg:mr-0 lg:w-full lg:max-w-[500px]">
                 <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#FC4242]/40 bg-[#FC4242]/10 px-4 py-1.5">
                   <Wine size={14} className="shrink-0 text-[#FC4242]" aria-hidden="true" />
                   <span className="fluid-caption font-bold uppercase tracking-wider text-[#FC4242]">
@@ -642,7 +735,7 @@ function DominusFoodPage() {
                 <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-white">
                   Conheça o Dominus Food
                 </h2>
-                <p className="fluid-body-lg leading-relaxed text-white/80">
+                <p className="fluid-body-lg leading-relaxed text-white">
                   <strong>Dominus Food</strong> é um sistema para botecos que ajuda você a organizar a operação, controlar os custos e identificar oportunidades para aumentar o lucro do seu negócio.
                 </p>
               </div>
@@ -906,8 +999,7 @@ function DominusFoodPage() {
           className="order-2 w-full py-16 sm:py-24 border-t border-border bg-background"
         >
           <div className="landing-page-container">
-            <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-              <div className="text-center lg:text-left">
+            <div className="mx-auto mb-10 max-w-4xl text-center sm:mb-14">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#FC4242]/10 px-4 py-1.5 fluid-secondary font-bold text-[#FC4242] sm:mb-4">
                 <Star size={13} aria-hidden="true" />
                 <span>CASES DE SUCESSO</span>
@@ -915,42 +1007,30 @@ function DominusFoodPage() {
               <h3 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
                 Quem já confia na tecnologia da Waybit
               </h3>
-              <p className="mx-auto mt-3 max-w-4xl fluid-body leading-relaxed text-muted-foreground lg:mx-0">
+              <p className="mx-auto mt-3 max-w-4xl fluid-body leading-relaxed text-muted-foreground">
                 Depoimentos e relatos de clientes do segmento de alimentação que transformaram a sua operação.
               </p>
             </div>
 
             <div
-              className="relative mx-auto h-[470px] w-full max-w-5xl sm:h-[560px]"
-              onMouseEnter={() => setIsFoodCasesPaused(true)}
-              onMouseLeave={() => setIsFoodCasesPaused(false)}
+              className="grid items-stretch grid-flow-col auto-cols-[90%] snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:thin] min-[771px]:w-full min-[771px]:grid-flow-row min-[771px]:auto-cols-auto min-[771px]:grid-cols-3 min-[771px]:gap-8 min-[771px]:overflow-visible min-[771px]:pb-0"
+              role="region"
+              aria-label="Cases de sucesso do Dominus Food"
+              tabIndex={0}
             >
-              {foodVideoCases.map((caseItem, index) => {
-                const offset = (index - activeFoodCaseIndex + foodVideoCases.length) % foodVideoCases.length;
-                const position = offset === foodVideoCases.length - 1 ? -1 : offset;
-                const isActive = position === 0;
-                const transform = isActive
-                  ? "translateX(-50%) scale(1)"
-                  : position < 0
-                    ? "translateX(-108%) scale(0.82)"
-                    : "translateX(8%) scale(0.82)";
-
-                return (
+              {foodVideoCases.map((caseItem, index) => (
                   <button
                     key={caseItem.id}
                     type="button"
-                    onClick={() => {
-                      if (isActive) {
-                        setActiveFoodVideo(caseItem);
-                      } else {
-                        setActiveFoodCaseIndex(index);
-                      }
-                    }}
-                    aria-label={isActive ? `Assistir case da ${caseItem.cliente}` : `Trazer o case da ${caseItem.cliente} para frente`}
-                    className={`group absolute left-1/2 top-0 aspect-[9/16] h-[440px] max-w-[72vw] overflow-hidden rounded-3xl border bg-black text-left shadow-2xl transition-all duration-700 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242] focus-visible:ring-offset-4 sm:h-[530px] ${
-                      isActive ? "z-20 border-[#FC4242]/70" : "z-10 cursor-pointer border-white/20 opacity-75"
+                    onClick={() => setActiveFoodVideo(caseItem)}
+                    aria-label={`Assistir case da ${caseItem.cliente}`}
+                    className={`success-story-card group relative flex h-full flex-col items-stretch aspect-[9/16] snap-start overflow-hidden rounded-3xl border border-[#FC4242]/70 bg-black text-left shadow-2xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242] focus-visible:ring-offset-4 ${
+                      index === 0
+                        ? "min-[771px]:justify-self-end"
+                        : index === 1
+                          ? "min-[771px]:justify-self-center"
+                          : "min-[771px]:justify-self-start"
                     }`}
-                    style={{ transform, filter: isActive ? "none" : "brightness(0.7)" }}
                   >
                     <img
                       src={`https://i.ytimg.com/vi/${caseItem.videoId}/hqdefault.jpg`}
@@ -960,31 +1040,155 @@ function DominusFoodPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" aria-hidden="true" />
                     <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-                      <span className="flex size-14 items-center justify-center rounded-full border-2 border-white bg-[#FC4242]/90 text-white shadow-xl transition-transform duration-300 group-hover:scale-110 sm:size-16">
+                      <span className="flex size-14 items-center justify-center rounded-full border-2 border-white/80 bg-black/50 text-white shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-110 sm:size-16">
                         <Play size={25} className="translate-x-0.5 fill-current" />
                       </span>
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
-                      <span className="mb-2 inline-flex rounded-full bg-[#FC4242] px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
-                        Case Dominus Food
-                      </span>
-                      <h4 className="font-display text-xl font-extrabold sm:text-2xl">{caseItem.cliente}</h4>
-                      <p className="mt-2 text-sm leading-relaxed text-white/85">{caseItem.texto}</p>
+                    <div
+                      ref={(element) => {
+                        successStoryContentRefs.current[index] = element;
+                      }}
+                      style={
+                        isSuccessStoriesDesktop && successStoryContentHeight !== null
+                          ? { minHeight: `${successStoryContentHeight}px` }
+                          : undefined
+                      }
+                      className="absolute inset-x-0 bottom-0 flex flex-col items-start justify-start p-5 text-white sm:p-6"
+                    >
+                      <h4 className="font-display text-2xl font-extrabold sm:text-3xl">{caseItem.cliente}</h4>
+                      <p className="mt-2 text-base leading-relaxed text-white/85 sm:text-lg">{caseItem.texto}</p>
                     </div>
                   </button>
-                );
-              })}
+              ))}
             </div>
-            <div className="mt-6 text-center sm:mt-8">
+          </div>
+        </section>
+
+        {/* ─── 8. COMPARATIVO: OUTROS SISTEMAS X DOMINUS FOOD ─── */}
+        <section
+          id="comparativo-dominus-food"
+          className="order-2 w-full border-t border-border bg-white py-16 sm:py-24"
+        >
+          <div className="landing-page-container">
+            <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-16">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#FC4242]/10 px-4 py-1.5 fluid-secondary font-bold text-[#FC4242] sm:mb-4">
+                <Layers size={13} aria-hidden="true" />
+                <span>COMPARAÇÃO NA PRÁTICA</span>
+              </div>
+              <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
+                Outros sistemas <span className="text-[#FC4242]">X</span> Dominus Food
+              </h2>
+              <p className="mx-auto mt-3.5 max-w-3xl fluid-body leading-relaxed text-muted-foreground">
+                Mais do que olhar o preço, entenda como cada escolha organiza a rotina do seu boteco
+                — do pedido à gestão.
+              </p>
+            </div>
+
+            <div className="w-full grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-subtle/45 shadow-sm">
+                <div className="border-b border-border bg-white/70 p-6 sm:p-8">
+                  <div className="flex items-center gap-4">
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-[#FC4242]/15 bg-[#FC4242]/8 text-[#FC4242]">
+                      <X size={23} strokeWidth={2.25} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="fluid-caption font-bold uppercase tracking-wider text-muted-foreground">
+                        Operação fragmentada
+                      </p>
+                      <h3 className="mt-1 font-display fluid-h3 font-extrabold text-foreground">
+                        Outros sistemas
+                      </h3>
+                    </div>
+                  </div>
+                  <p className="mt-5 fluid-secondary leading-relaxed text-muted-foreground">
+                    Quando as ferramentas não trabalham juntas, a equipe precisa preencher as
+                    lacunas no dia a dia.
+                  </p>
+                </div>
+
+                <ul className="flex flex-1 flex-col p-4 sm:p-5">
+                  {comparativoSistemas.outros.map((item) => (
+                    <li
+                      key={item.titulo}
+                      className="flex gap-3 border-b border-border px-2 py-4 first:pt-2 last:border-b-0 last:pb-2 sm:gap-4 sm:px-3"
+                    >
+                      <span
+                        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#FC4242]/10 text-[#FC4242]"
+                        aria-hidden="true"
+                      >
+                        <X size={15} strokeWidth={2.5} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="fluid-body font-bold leading-snug text-foreground">
+                          {item.titulo}
+                        </p>
+                        <p className="mt-1 fluid-secondary leading-relaxed text-muted-foreground">
+                          {item.descricao}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-[#FC4242] bg-white shadow-md">
+                <div className="border-b border-[#FC4242]/15 bg-[#FC4242]/5 p-6 sm:p-8">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#FC4242] text-white shadow-sm">
+                        <ShieldCheck size={24} strokeWidth={2.25} aria-hidden="true" />
+                      </span>
+                      <div>
+                        <p className="fluid-caption font-bold uppercase tracking-wider text-[#FC4242]">
+                          Operação conectada
+                        </p>
+                        <h3 className="mt-1 font-display fluid-h3 font-extrabold text-foreground">
+                          Dominus Food
+                        </h3>
+                      </div>
+                    </div>
+                    <span className="rounded-full border border-[#FC4242]/20 bg-white px-3 py-1.5 fluid-caption font-bold text-[#FC4242] shadow-sm">
+                      Gestão integrada
+                    </span>
+                  </div>
+                  <p className="mt-5 fluid-secondary leading-relaxed text-muted-foreground">
+                    Atendimento, cozinha, estoque, caixa e canais de venda reunidos para dar mais
+                    clareza à operação.
+                  </p>
+                </div>
+
+                <ul className="flex flex-1 flex-col p-4 sm:p-5">
+                  {comparativoSistemas.dominus.map((item) => (
+                    <li
+                      key={item.titulo}
+                      className="flex gap-3 border-b border-[#FC4242]/10 px-2 py-4 first:pt-2 last:border-b-0 last:pb-2 sm:gap-4 sm:px-3"
+                    >
+                      <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#63B628]/10 text-[#63B628]">
+                        <CheckCircle2 size={17} strokeWidth={2.5} aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="fluid-body font-bold leading-snug text-foreground">
+                          {item.titulo}
+                        </p>
+                        <p className="mt-1 fluid-secondary leading-relaxed text-muted-foreground">
+                          {item.descricao}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </div>
+
+            <div className="mt-10 text-center sm:mt-12">
               <button
                 type="button"
                 onClick={scrollToLeadForm}
                 className="inline-flex min-h-14 w-full max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2 sm:w-auto sm:px-8"
               >
-                <span className="text-center">Quero transformar meu boteco também</span>
+                <span className="text-center">Quero transformar meu boteco agora</span>
                 <ArrowRight size={16} className="shrink-0" aria-hidden="true" />
               </button>
-            </div>
             </div>
           </div>
         </section>
@@ -1026,19 +1230,10 @@ function DominusFoodPage() {
           className="order-6 relative w-full overflow-hidden py-16 sm:py-24 lg:py-28 border-t border-[#FC4242]/20"
           style={{
             background:
-              "linear-gradient(135deg, #160404 0%, #250808 45%, #2e0b0b 65%, #160404 100%)",
+              "radial-gradient(ellipse 72% 68% at 84% 28%, rgba(252,66,66,0.34) 0%, rgba(168,30,35,0.18) 38%, transparent 68%), radial-gradient(ellipse 58% 62% at 10% 88%, rgba(221,51,55,0.24) 0%, transparent 65%), linear-gradient(135deg, #30090c 0%, #481014 38%, #2d090d 68%, #190507 100%)",
           }}
         >
           {/* Fundo luminoso */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 65% 55% at 50% 40%, rgba(252,66,66,0.20) 0%, transparent 70%)",
-            }}
-          />
-
           <div className="landing-page-container relative z-10">
             <div className="max-w-7xl mx-auto text-center mb-10 sm:mb-14">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#FC4242]/40 bg-[#FC4242]/15 px-4 py-1.5 mb-4">
