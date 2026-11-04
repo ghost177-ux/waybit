@@ -35,7 +35,7 @@ export function BlogCarouselSection({ onOpenSpecialist }: BlogCarouselSectionPro
         {/* Cabeçalho da Seção */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 w-full">
           <div className="w-full">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-semibold text-primary mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6">
               <BookOpen size={13} className="text-primary" />
               <span>Blog & Conteúdos Estratégicos</span>
             </div>

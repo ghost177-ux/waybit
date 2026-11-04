@@ -75,7 +75,7 @@ export function CicloOperacionalSideBySide() {
         ======================================================== */}
         <div className="flex w-full flex-col justify-center lg:w-[53%] lg:order-1">
           {/* Tag de Seção Oficial */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-primary mb-3 sm:mb-4 w-fit">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6 w-fit">
             <Workflow size={14} className="text-primary shrink-0" />
             <span>Operação Integrada</span>
           </div>

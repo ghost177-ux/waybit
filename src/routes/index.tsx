@@ -955,7 +955,7 @@ function Index() {
         <section id="solucao-dominus" className="py-12 sm:py-16 lg:py-24 relative overflow-hidden bg-background w-full">
           <div className="fluid-container">
             <div className="w-full mx-auto text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-primary mb-3 sm:mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6">
                 <Sparkles size={14} className="text-[#FFB800]" />
                 <span>O Sistema de Gestão Definitivo</span>
               </div>
@@ -979,7 +979,7 @@ function Index() {
               {/* O Caos Tradicional */}
               <div className="rounded-2xl border border-rose-500/20 bg-rose-500/[0.02] p-5 sm:p-7 lg:p-9 flex flex-col justify-between w-full">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full fluid-caption font-semibold bg-rose-500/10 text-rose-600 mb-4 sm:mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full fluid-caption font-bold uppercase tracking-wider bg-rose-500/10 text-rose-600 mb-5 sm:mb-6">
                     <span className="size-2 rounded-full bg-rose-500" />
                     Como é a gestão sem o Dominus
                   </div>
@@ -1031,7 +1031,7 @@ function Index() {
               {/* A Solução Dominus */}
               <div className="rounded-2xl border border-[#71BE44]/30 bg-gradient-to-br from-[#71BE44]/[0.06] via-transparent to-[#00ADEF]/[0.05] p-5 sm:p-7 lg:p-9 flex flex-col justify-between shadow-sm relative w-full">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full fluid-caption font-semibold bg-[#71BE44]/15 text-[#62a83a] mb-4 sm:mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full fluid-caption font-bold uppercase tracking-wider bg-[#71BE44]/15 text-[#62a83a] mb-5 sm:mb-6">
                     <span className="size-2 rounded-full bg-[#71BE44]" />
                     Com o Sistema Dominus da Waybit
                   </div>
@@ -1085,7 +1085,7 @@ function Index() {
         <section id="depoimentos" className="py-12 sm:py-16 lg:py-24 bg-surface-subtle border-t border-border relative overflow-hidden w-full">
           <div className="fluid-container">
             <div className="w-full mx-auto text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-primary mb-3 sm:mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6">
                 <Quote size={13} className="text-primary" />
                 <span>Histórias Reais de Sucesso</span>
               </div>
@@ -1254,7 +1254,7 @@ function Index() {
 
               {/* Coluna 2 — Direita: Conteúdo textual */}
               <div className="min-w-0 w-full">
-                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-emerald-600 mb-3 sm:mb-4">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-emerald-600 mb-5 sm:mb-6">
                   <ShieldCheck size={14} className="text-[#71BE44]" />
                   <span>Diferencial Exclusivo Waybit</span>
                 </div>
@@ -1357,7 +1357,7 @@ function Index() {
           {/* Container Global 100% Fluido com Gutter Unificado (3% <540px, 5% 540-1439px, 10% >=1440px) */}
           <div className="fluid-container">
             <div className="w-full mx-auto text-center mb-10 sm:mb-14 lg:mb-16">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 sm:px-4 py-1.5 fluid-caption font-bold text-primary mb-3 sm:mb-4 shadow-2xs">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6 shadow-2xs">
                 <Sparkles size={13} className="text-primary" />
                 <span>Ecossistema Waybit • Soluções Especializadas</span>
               </div>
@@ -1413,7 +1413,7 @@ function Index() {
           <div className="fluid-container">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12 w-full">
               <div className="w-full">
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-amber-600 mb-2.5 sm:mb-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-amber-600 mb-5 sm:mb-6">
                   <Star size={13} fill="#FFB800" stroke="#FFB800" />
                   <span>Avaliações Verificadas</span>
                 </div>

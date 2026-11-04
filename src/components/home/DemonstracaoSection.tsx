@@ -24,8 +24,8 @@ export function DemonstracaoSection() {
         {/* ========================================================
             TAG (FORA DA IMAGEM DO ESCRITÓRIO, NO TOPO DA SEÇÃO)
         ======================================================== */}
-        <div className="fluid-container relative z-20 flex flex-col items-center text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 sm:px-4 py-1.5 fluid-caption font-semibold text-primary shadow-2xs">
+        <div className="fluid-container relative z-20 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-primary mb-5 sm:mb-6 shadow-2xs">
             <Sparkles size={14} className="text-[#FFB800]" />
             <span>Demonstração Waybit</span>
           </div>
