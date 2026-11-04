@@ -5,18 +5,18 @@ import type { CSSProperties } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SpecialistDialog } from "@/components/SpecialistDialog";
-import promoAutocenterDesktop1 from "@/assets/prom_ct1.png";
-import promoAutocenterDesktop2 from "@/assets/prom_ct3.png";
-import promoAutocenterMobile1 from "@/assets/prom_ct2.png";
-import promoAutocenterMobile2 from "@/assets/prom_ct4.png";
-import promoFoodDesktop1 from "@/assets/prom_fd1.png";
-import promoFoodDesktop2 from "@/assets/prom_fd3.png";
-import promoFoodMobile1 from "@/assets/prom_fd2.png";
-import promoFoodMobile2 from "@/assets/prom_fd4.png";
-import promoVarejoDesktop1 from "@/assets/prom_vj1.png";
-import promoVarejoDesktop2 from "@/assets/prom_vj3.png";
-import promoVarejoMobile1 from "@/assets/prom_vj2.png";
-import promoVarejoMobile2 from "@/assets/prom_vj4.png";
+import promoAutocenterDesktop1 from "@/assets/ct1.avif";
+import promoAutocenterDesktop2 from "@/assets/ct3.avif";
+import promoAutocenterMobile1 from "@/assets/ct2.avif";
+import promoAutocenterMobile2 from "@/assets/ct4.avif";
+import promoFoodDesktop1 from "@/assets/fd1.avif";
+import promoFoodDesktop2 from "@/assets/fd3.avif";
+import promoFoodMobile1 from "@/assets/fd2.avif";
+import promoFoodMobile2 from "@/assets/fd4.avif";
+import promoVarejoDesktop1 from "@/assets/vj1.avif";
+import promoVarejoDesktop2 from "@/assets/vj3.avif";
+import promoVarejoMobile1 from "@/assets/vj2.avif";
+import promoVarejoMobile2 from "@/assets/vj4.avif";
 
 // ─── Tipos de search params aceitos pela rota ─────────────────────────────────
 // Quando ?segmento=food está presente, a página entra em modo exclusivo Food.

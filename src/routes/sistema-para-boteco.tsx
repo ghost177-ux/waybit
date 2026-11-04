@@ -506,7 +506,7 @@ function DominusIaSection({ onOpenSpecialist }: {
   return (
     <section
       id="dominus-ia-food"
-      className="order-3 w-full border-t border-border bg-white"
+      className="order-5 w-full border-t border-border bg-white"
     >
       <div className="landing-page-container">
         <div
@@ -856,7 +856,7 @@ function DominusFoodPage() {
         {/* ─── 4. FUNCIONALIDADES DETALHADAS POR ROTINA ─── */}
         <section
           id="funcionalidades-dominus-food"
-          className="order-5 w-full bg-background border-t border-border"
+          className="order-6 w-full bg-background border-t border-border"
         >
           <div className="landing-page-container">
             <div className="section-intro mx-auto max-w-7xl text-center">
@@ -952,9 +952,6 @@ function DominusFoodPage() {
           </div>
         </section>
 
-        {/* ─── 5. DESTAQUE DOMINUS IA — GESTÃO INTELIGENTE DE ESTOQUE ─── */}
-        <DominusIaSection onOpenSpecialist={() => setSpecialistOpen(true)} />
-
         {/* ─── 2. APRESENTAÇÃO DO ECOSSISTEMA DOMINUS FOOD ─── */}
         <section id="solucao-dominus-food" className="order-4 w-full bg-background">
           <div className="landing-page-container">
@@ -1024,6 +1021,9 @@ function DominusFoodPage() {
             </div>
           </div>
         </section>
+
+        {/* ─── 5. DESTAQUE DOMINUS IA — GESTÃO INTELIGENTE DE ESTOQUE ─── */}
+        <DominusIaSection onOpenSpecialist={() => setSpecialistOpen(true)} />
 
         {/* ─── 7. PROVA SOCIAL, INDICADORES & CLIENTES REAIS ─── */}
         <section id="prova-social-dominus-food" className="order-2 w-full border-t border-border bg-background py-12 sm:py-16 lg:py-24">
