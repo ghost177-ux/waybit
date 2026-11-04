@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DominusFoodRouteImport } from './routes/dominus-food'
 import { Route as PlanosRouteImport } from './routes/planos'
-import { Route as Planosv2RouteImport } from './routes/planosv2'
 import { Route as SistemaParaBotecoRouteImport } from './routes/sistema-para-boteco'
 
 const IndexRoute = IndexRouteImport.update({
@@ -30,11 +29,6 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Planosv2Route = Planosv2RouteImport.update({
-  id: '/planosv2',
-  path: '/planosv2',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SistemaParaBotecoRoute = SistemaParaBotecoRouteImport.update({
   id: '/sistema-para-boteco',
   path: '/sistema-para-boteco',
@@ -45,14 +39,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dominus-food': typeof DominusFoodRoute
   '/planos': typeof PlanosRoute
-  '/planosv2': typeof Planosv2Route
   '/sistema-para-boteco': typeof SistemaParaBotecoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dominus-food': typeof DominusFoodRoute
   '/planos': typeof PlanosRoute
-  '/planosv2': typeof Planosv2Route
   '/sistema-para-boteco': typeof SistemaParaBotecoRoute
 }
 export interface FileRoutesById {
@@ -60,29 +52,20 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dominus-food': typeof DominusFoodRoute
   '/planos': typeof PlanosRoute
-  '/planosv2': typeof Planosv2Route
   '/sistema-para-boteco': typeof SistemaParaBotecoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/dominus-food' | '/planos' | '/planosv2' | '/sistema-para-boteco'
+  fullPaths: '/' | '/dominus-food' | '/planos' | '/sistema-para-boteco'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dominus-food' | '/planos' | '/planosv2' | '/sistema-para-boteco'
-  id:
-    | '__root__'
-    | '/'
-    | '/dominus-food'
-    | '/planos'
-    | '/planosv2'
-    | '/sistema-para-boteco'
+  to: '/' | '/dominus-food' | '/planos' | '/sistema-para-boteco'
+  id: '__root__' | '/' | '/dominus-food' | '/planos' | '/sistema-para-boteco'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DominusFoodRoute: typeof DominusFoodRoute
   PlanosRoute: typeof PlanosRoute
-  Planosv2Route: typeof Planosv2Route
   SistemaParaBotecoRoute: typeof SistemaParaBotecoRoute
 }
 
@@ -109,13 +92,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/planosv2': {
-      id: '/planosv2'
-      path: '/planosv2'
-      fullPath: '/planosv2'
-      preLoaderRoute: typeof Planosv2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sistema-para-boteco': {
       id: '/sistema-para-boteco'
       path: '/sistema-para-boteco'
@@ -130,7 +106,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DominusFoodRoute: DominusFoodRoute,
   PlanosRoute: PlanosRoute,
-  Planosv2Route: Planosv2Route,
   SistemaParaBotecoRoute: SistemaParaBotecoRoute,
 }
 export const routeTree = rootRouteImport
