@@ -193,38 +193,86 @@
   padding-inline: var(--page-gutter);
 }
 
-/* Gutter exclusivo da Landing Page Dominus Food, sem afetar outros usos globais. */
+/* Gutter responsivo exclusivo da Landing Page Dominus Food. */
 .dominus-food-page {
   --page-gutter: 3%;
 }
 
-@media (min-width: 540px) {
+/* Escalas estruturais aplicadas somente às seções posteriores ao Hero. */
+.dominus-food-page main > section {
+  padding-block: clamp(4rem, 6vw, 6rem);
+}
+
+.dominus-food-page main > section .section-intro {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.dominus-food-page main .section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  border-radius: 9999px;
+  padding: 0.375rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .dominus-food-page main .section-eyebrow {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.dominus-food-page main > section h2 {
+  font-size: clamp(26px, calc(1.15rem + 1.7vw - 2px), 42px);
+  line-height: 1.15;
+}
+
+.dominus-food-page main > section h3 {
+  font-size: clamp(16px, calc(1rem + 0.5vw - 2px), 22px);
+  line-height: 1.3;
+}
+
+.dominus-food-page main > section h4 {
+  font-size: clamp(14px, calc(0.94rem + 0.35vw - 2px), 18px);
+  line-height: 1.35;
+}
+
+.dominus-food-page main > section p:not(.fluid-caption):not(.fluid-legal) {
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  line-height: 1.65;
+}
+
+.dominus-food-page main > section h2 + p {
+  margin-top: 1rem;
+}
+
+.dominus-food-page main > section h3 + p {
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 770px) {
   .dominus-food-page {
     --page-gutter: 5%;
   }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1441px) {
   .dominus-food-page {
-    --page-gutter: 8%;
+    --page-gutter: 10%;
   }
 }
 
-@media (min-width: 1985px) {
-  .dominus-food-page {
-    --page-gutter: calc(clamp(0, calc((2120px - 100vw) / 135px), 1) * 8%);
-  }
-}
-
-@media (min-width: 2120px) {
+@media (min-width: 1986px) {
   .dominus-food-page {
     --page-gutter: 0%;
-  }
-}
-
-@media (min-width: 1440px) {
-  .dominus-food-page .landing-page-container {
-    width: clamp(80%, calc(116.42201835% - 524.47614679px), 90%);
   }
 }
 

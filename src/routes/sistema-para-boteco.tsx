@@ -2,6 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  MonitorX,
   Utensils,
   CheckCircle2,
   ChevronDown,
@@ -29,10 +34,21 @@ import {
   ArrowUpRight,
   Play,
   X,
+  Laptop,
+  MessageSquare,
+  Wifi as WifiIcon,
+  Boxes,
 } from "lucide-react";
 import { DominusFoodHeader } from "@/components/DominusFoodHeader";
 import { SpecialistDialog } from "@/components/SpecialistDialog";
 import { FullFunnelBookingModal } from "@/components/FullFunnelBookingModal";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 import foodLogo from "@/assets/food-logo.png";
 import dominusIaLogo from "@/assets/Dominus IA.png";
@@ -45,6 +61,12 @@ import pointOfSaleImage from "@/assets/PDV Rápido.png";
 import inventoryImage from "@/assets/Controle de estoque.avif";
 import dashboardImage from "@/assets/Dashboard.avif";
 import bitfoodImage from "@/assets/BITFOOD COMPUTADOR.png";
+import blogFoodInclusionImage from "@/assets/principal - a importancia da.png";
+import blogRestaurantHybridImage from "@/assets/principal - a nova era dos.png";
+import blogXmlStorageImage from "@/assets/principal - a nova regra.png";
+import blogNfceDecreeImage from "@/assets/principal - alteração do decreto.jpg";
+import blogDeliveryMistakesImage from "@/assets/principal - 5 erros que.png";
+import blogDominusIntegrationsImage from "@/assets/principal - 5 integrações do dominus.jpg";
 
 export const Route = createFileRoute("/sistema-para-boteco")({
   head: () => ({
@@ -77,7 +99,7 @@ const dores = [
     icon: ClipboardList,
     titulo: "Comandas confusas",
     problema: "Pedidos anotados no papel se perdem na correria.",
-    resposta: "Comandas digitais com consumo atualizado em tempo real.",
+    resposta: "Comandas digitais com consumo em tempo real.",
   },
   {
     id: "dor-cozinha",
@@ -92,7 +114,6 @@ const dores = [
     titulo: "Operação parada",
     problema: "Internet instável ou PDV lento atrapalham as vendas.",
     resposta: "PDV ágil com recursos para operar offline.",
-    observacao: "A disponibilidade offline depende da configuração técnica homologada.",
   },
   {
     id: "dor-estoque",
@@ -300,55 +321,55 @@ const comparativoSistemas = {
   outros: [
     {
       titulo: "Delivery em outra tela",
-      descricao: "Sem integração, pedidos podem exigir lançamento manual e aumentar o retrabalho.",
+      descricao: "Sem integração com apps de delivery",
     },
     {
       titulo: "Estoque com pouca visibilidade",
-      descricao: "Entradas, saídas e reposições ficam mais difíceis de acompanhar.",
+      descricao: "Controle de estoque limitado ou incompleto",
     },
     {
       titulo: "Comandas no papel",
-      descricao: "Pedidos podem se perder ou chegar incompletos no movimento do salão.",
+      descricao: "Comandas perdidas e pedidos trocados no salão",
     },
     {
       titulo: "Informações espalhadas",
-      descricao: "Caixa, operação e resultados precisam ser conferidos em lugares diferentes.",
+      descricao: "Relatórios limitados ou pagos à parte",
     },
     {
       titulo: "PDV pouco flexível",
-      descricao: "Um fluxo lento no caixa pode atrapalhar o atendimento nos horários de pico.",
+      descricao: "PDV travado e pouco intuitivo.",
     },
     {
       titulo: "Salão e cozinha desconectados",
-      descricao: "A equipe depende de repasses manuais para encaminhar os pedidos.",
+      descricao: "Sem integração entre salão e cozinha.",
     },
   ],
   dominus: [
     {
       titulo: "Delivery centralizado",
       descricao:
-        "Integração com iFood e Bitfood para concentrar os pedidos, conforme a configuração contratada.",
+        "Integração com iFood entre outros sem custo adicional",
     },
     {
       titulo: "Estoque acompanhado",
       descricao:
-        "Controle de entradas, saídas e consumo, com alertas de reposição e gestão de combos.",
+        "Controle de estoque completo e automatizado",
     },
     {
       titulo: "Comandas digitais",
-      descricao: "Registro dos pedidos pelo garçom e acompanhamento do consumo por mesa.",
+      descricao: "Comandas digitais e atendimento ágil",
     },
     {
       titulo: "Gestão com mais clareza",
-      descricao: "Relatórios detalhados e informações operacionais e financeiras em tempo real.",
+      descricao: "Relatórios completos e detalhados",
     },
     {
       titulo: "PDV pensado para a rotina",
-      descricao: "Fluxo de venda apresentado como rápido e intuitivo, integrado ao caixa.",
+      descricao: "PDV rápido, fácil e bem intuitívo",
     },
     {
       titulo: "Operação conectada",
-      descricao: "Pedidos do salão podem ser encaminhados à cozinha em um mesmo fluxo.",
+      descricao: "Integração total entre salão e cozinha",
     },
   ],
 };
@@ -457,9 +478,8 @@ function FaqAccordionItem({
           {pergunta}
         </span>
         <div
-          className={`flex shrink-0 items-center justify-center text-[#FC4242] transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`flex shrink-0 items-center justify-center text-[#FC4242] transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            }`}
           aria-hidden="true"
         >
           <ChevronDown size={16} />
@@ -486,24 +506,28 @@ function DominusIaSection({ onOpenSpecialist }: {
   return (
     <section
       id="dominus-ia-food"
-      className="order-3 w-full border-t border-[#549192]/20 py-14 sm:py-20 lg:py-24"
-      style={{ background: "radial-gradient(ellipse 55% 45% at 15% 80%, rgba(113,198,187,0.45) 0%, transparent 60%), radial-gradient(ellipse 70% 60% at 80% 30%, rgba(113,198,187,0.8) 0%, transparent 65%), linear-gradient(135deg, #28595B 0%, color-mix(in srgb, #28595B 70%, #71C6BB) 35%, #71C6BB 65%, #28595B 100%)" }}
+      className="order-3 w-full border-t border-border bg-white"
     >
       <div className="landing-page-container">
-        <div className="grid min-w-0 grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
+        <div
+          className="grid w-full min-w-0 grid-cols-1 items-center gap-10 rounded-3xl border border-[#549192]/30 p-6 shadow-xl sm:p-8 lg:grid-cols-2 lg:gap-12 lg:p-12"
+          style={{
+            background: "radial-gradient(ellipse 55% 45% at 15% 80%, rgba(113,198,187,0.45) 0%, transparent 60%), radial-gradient(ellipse 70% 60% at 80% 30%, rgba(113,198,187,0.8) 0%, transparent 65%), linear-gradient(135deg, #28595B 0%, color-mix(in srgb, #28595B 70%, #71C6BB) 35%, #71C6BB 65%, #28595B 100%)"
+          }}
+        >
           <div className="flex h-full min-w-0 flex-col items-start justify-center gap-5 text-left sm:gap-6">
             <div className="flex items-center gap-4 sm:gap-5">
               <img src={dominusIaLogo} alt="Dominus IA" className="h-12 w-auto max-w-[40%] object-contain sm:h-16" />
-              <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-[#173C3D]">Dominus IA</h2>
+              <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-white">Dominus IA</h2>
             </div>
-            <p className="font-display fluid-h3 font-extrabold leading-snug text-white">Inteligência Artificial na gestão de estoque</p>
+            <h3 className="font-display fluid-h3 font-extrabold leading-snug text-white">Inteligência Artificial na gestão de estoque</h3>
             <p className="fluid-body font-medium leading-relaxed text-white">
-                    A Waybit desenvolveu o Dominus IA para apoiar as tarefas mais críticas do estoque:
-                    leitura e entrada automatizada de notas fiscais, conferência de contagens, cálculo
-                    do Custo de Mercadorias Vendidas (CMV) e análise preditiva de ruptura.
-                  </p>
+              A Waybit desenvolveu o Dominus IA para apoiar as tarefas mais críticas do estoque:
+              leitura e entrada automatizada de notas fiscais, conferência de contagens, cálculo
+              do Custo de Mercadorias Vendidas (CMV) e análise preditiva de ruptura.
+            </p>
             <ul className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-              {["Entrada ágil de NF-e de fornecedores","Análise de margem e CMV por porção","Alertas para evitar falta de insumos","Mais precisão nas compras da semana"].map((benefit) => (
+              {["Entrada ágil de NF-e de fornecedores", "Análise de margem e CMV por porção", "Alertas para evitar falta de insumos", "Mais precisão nas compras da semana"].map((benefit) => (
                 <li key={benefit} className="flex items-start gap-2 fluid-secondary font-medium text-white">
                   <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#173C3D]" aria-hidden="true" />
                   <span>{benefit}</span>
@@ -512,8 +536,8 @@ function DominusIaSection({ onOpenSpecialist }: {
             </ul>
             <button type="button" onClick={onOpenSpecialist} className="inline-flex min-h-12 max-w-full items-center rounded-xl bg-[#173C3D] px-6 py-3 text-left font-bold fluid-btn text-white shadow-md transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#80CCC3] focus-visible:ring-offset-2">Saber mais sobre o Dominus IA</button>
             <p className="fluid-legal font-medium leading-relaxed text-white">
-                    * Módulo avançado sujeito a plano e disponibilidade. Consulte a equipe comercial para saber mais.
-                  </p>
+              * Módulo avançado sujeito a plano e disponibilidade. Consulte a equipe comercial para saber mais.
+            </p>
           </div>
           <div className="flex min-w-0 items-center justify-center">
             <img src={dominusIaProductImage} alt="Dominus IA em notebook e smartphone" className="block h-auto w-full max-w-full object-contain" loading="lazy" decoding="async" />
@@ -526,11 +550,13 @@ function DominusIaSection({ onOpenSpecialist }: {
 
 function DominusFoodPage() {
   const [specialistOpen, setSpecialistOpen] = useState(false);
+  const [blogCarouselApi, setBlogCarouselApi] = useState<CarouselApi>();
   const [bookingOpen, setBookingOpen] = useState(false);
   const [billingCycle, setBillingCycle] = useState<"anual" | "mensal">("anual");
   const [activeFaqIndex, setActiveFaqIndex] = useState(0);
   const [activeRotinaTab, setActiveRotinaTab] = useState(0);
   const [activeFoodVideo, setActiveFoodVideo] = useState<(typeof foodVideoCases)[number] | null>(null);
+  const [isIntroVideoOpen, setIsIntroVideoOpen] = useState(false);
   const [isSuccessStoriesDesktop, setIsSuccessStoriesDesktop] = useState(false);
   const [successStoryContentHeight, setSuccessStoryContentHeight] = useState<number | null>(null);
   const successStoryContentRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -564,6 +590,23 @@ function DominusFoodPage() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeFoodVideo]);
+
+  useEffect(() => {
+    if (!isIntroVideoOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsIntroVideoOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isIntroVideoOpen]);
 
   useEffect(() => {
     const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
@@ -733,10 +776,10 @@ function DominusFoodPage() {
                   </span>
                 </div>
                 <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-white">
-                  Conheça o Dominus Food
+                  Conheça o sistema <span className="text-[#FC4242]">Dominus Food </span>
                 </h2>
                 <p className="fluid-body-lg leading-relaxed text-white">
-                  <strong>Dominus Food</strong> é um sistema para botecos que ajuda você a organizar a operação, controlar os custos e identificar oportunidades para aumentar o lucro do seu negócio.
+                  Um sistema para botecos que ajuda você a organizar a operação, controlar os custos e identificar oportunidades para aumentar o lucro do seu negócio.
                 </p>
               </div>
             </div>
@@ -748,19 +791,16 @@ function DominusFoodPage() {
 
 
         {/* ─── 3. DORES DO GESTOR DE BOTECO (Problemas x Respostas) ─── */}
-        <section id="dores-dominus-food" className="w-full py-16 sm:py-20 bg-background">
+        <section id="dores-dominus-food" className="w-full bg-background">
           <div className="landing-page-container">
-            <div className="max-w-7xl mx-auto text-center mb-12 sm:mb-16">
-              <div
-                className="mb-3 inline-flex items-center gap-2 rounded-full px-4 py-1.5 fluid-secondary font-bold sm:mb-4"
-                style={{ backgroundColor: "#FC42420D", color: "#FC4242" }}
-              >
-                <span>Os desafios do dia a dia</span>
+            <div className="section-intro mx-auto max-w-7xl text-center">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242] bg-[#FC4242]/10 px-4 py-1.5 text-[#FC4242] mb-5 sm:mb-6">
+                <span className="fluid-caption font-bold uppercase tracking-wider">Se identifica ?</span>
               </div>
               <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
-                O que trava a operação do seu boteco
+                Operações que travam o seu boteco
               </h2>
-              <p className="mt-3.5 fluid-body text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+              <p className="mmt-3.5 text-muted-foreground leading-relaxed max-w-4xl mx-auto" style={{ fontSize: '20px', lineHeight: '1.6' }}>
                 Quem atende balcão e salão movimentados sabe: ferramentas improvisadas geram perdas,
                 pedidos trocados e fechamento de caixa com dor de cabeça.
               </p>
@@ -803,11 +843,6 @@ function DominusFoodPage() {
                         <p className="fluid-secondary leading-relaxed text-foreground">
                           {dor.resposta}
                         </p>
-                        {dor.observacao && (
-                          <p className="mt-2 fluid-legal leading-relaxed text-muted-foreground">
-                            {dor.observacao}
-                          </p>
-                        )}
                       </div>
                     </article>
                   );
@@ -821,16 +856,16 @@ function DominusFoodPage() {
         {/* ─── 4. FUNCIONALIDADES DETALHADAS POR ROTINA ─── */}
         <section
           id="funcionalidades-dominus-food"
-          className="order-5 w-full py-16 sm:py-24 bg-background border-t border-border"
+          className="order-5 w-full bg-background border-t border-border"
         >
           <div className="landing-page-container">
-            <div className="max-w-7xl mx-auto text-center mb-12 sm:mb-16">
+            <div className="section-intro mx-auto max-w-7xl text-center">
               <div
-                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 fluid-secondary font-bold mb-3 sm:mb-4"
+                className="section-eyebrow inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5 sm:mb-6"
                 style={{ backgroundColor: "#FC42420D", color: "#FC4242" }}
               >
                 <Utensils size={13} aria-hidden="true" />
-                <span>Funcionalidades do Dominus Food</span>
+                <span className="fluid-caption font-bold uppercase tracking-wider">Funcionalidades do Dominus Food</span>
               </div>
               <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
                 Recursos pensados para cada momento da sua rotina
@@ -904,11 +939,11 @@ function DominusFoodPage() {
                 })}
               </div>
             </div>
-            <div className="mt-10 text-center sm:mt-12">
+            <div className="mt-10 flex justify-center sm:mt-12">
               <button
                 type="button"
                 onClick={scrollToLeadForm}
-                className="inline-flex min-h-14 w-full max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2 sm:w-auto sm:px-8"
+                className="inline-flex min-h-14 w-[70%] max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2"
               >
                 <span className="text-center">Quero conhecer o Dominus Food</span>
                 <ArrowRight size={16} className="shrink-0" aria-hidden="true" />
@@ -921,7 +956,7 @@ function DominusFoodPage() {
         <DominusIaSection onOpenSpecialist={() => setSpecialistOpen(true)} />
 
         {/* ─── 2. APRESENTAÇÃO DO ECOSSISTEMA DOMINUS FOOD ─── */}
-        <section id="solucao-dominus-food" className="order-4 w-full bg-background py-14 sm:py-20 lg:py-24">
+        <section id="solucao-dominus-food" className="order-4 w-full bg-background">
           <div className="landing-page-container">
             <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
               <div className="relative mx-auto flex w-full max-w-[1020px] items-center justify-center overflow-hidden">
@@ -942,22 +977,19 @@ function DominusFoodPage() {
               </div>
 
               <div className="flex w-full flex-col gap-4 sm:gap-5">
-              <div className="mb-4 w-full text-left sm:mb-5">
-                <div
-                  className="mb-3 inline-flex items-center gap-2 rounded-full px-4 py-1.5 fluid-secondary font-bold sm:mb-4"
-                  style={{ backgroundColor: "#FC42420D", color: "#FC4242" }}
-                >
-                  <Layers size={13} aria-hidden="true" />
-                  <span>GESTÃO SIMPLIFICADA</span>
+                <div className="section-intro w-full text-left">
+                  <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242] bg-[#FC4242]/10 px-4 py-1.5 text-[#FC4242] mb-5 sm:mb-6">
+                    <Zap size={13} aria-hidden="true" />
+                    <span className="fluid-caption font-bold uppercase tracking-wider">GESTÃO SIMPLIFICADA</span>
+                  </div>
+                  <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
+                    Tudo o que seu boteco precisa, em um só sistema.
+                  </h2>
+                  <p className="mt-3.5 w-full max-w-4xl fluid-body leading-relaxed text-muted-foreground">
+                    Do atendimento ao caixa, acompanhe sua operação com ferramentas que trabalham juntas
+                    para facilitar a gestão do seu negócio.
+                  </p>
                 </div>
-                <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
-                  Tudo o que seu boteco precisa, em um só sistema.
-                </h2>
-                <p className="mt-3.5 w-full max-w-4xl fluid-body leading-relaxed text-muted-foreground">
-                  Do atendimento ao caixa, acompanhe sua operação com ferramentas que trabalham juntas
-                  para facilitar a gestão do seu negócio.
-                </p>
-              </div>
                 {pilares.map((pilar) => {
                   const Icon = pilar.icon;
                   return (
@@ -994,72 +1026,87 @@ function DominusFoodPage() {
         </section>
 
         {/* ─── 7. PROVA SOCIAL, INDICADORES & CLIENTES REAIS ─── */}
-        <section
-          id="prova-social-dominus-food"
-          className="order-2 w-full py-16 sm:py-24 border-t border-border bg-background"
-        >
+        <section id="prova-social-dominus-food" className="order-2 w-full border-t border-border bg-background py-12 sm:py-16 lg:py-24">
           <div className="landing-page-container">
-            <div className="mx-auto mb-10 max-w-4xl text-center sm:mb-14">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#FC4242]/10 px-4 py-1.5 fluid-secondary font-bold text-[#FC4242] sm:mb-4">
+            <div className="section-intro mx-auto max-w-4xl text-center mb-8 sm:mb-12 lg:mb-14">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242] bg-[#FC4242]/10 px-4 py-1.5 text-[#FC4242] mb-5 sm:mb-6">
                 <Star size={13} aria-hidden="true" />
-                <span>CASES DE SUCESSO</span>
+                <span className="fluid-caption font-bold uppercase tracking-wider">CASES DE SUCESSO</span>
               </div>
-              <h3 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
+              <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
                 Quem já confia na tecnologia da Waybit
-              </h3>
-              <p className="mx-auto mt-3 max-w-4xl fluid-body leading-relaxed text-muted-foreground">
-                Depoimentos e relatos de clientes do segmento de alimentação que transformaram a sua operação.
+              </h2>
+              <p className="mt-3.5 text-muted-foreground leading-relaxed max-w-4xl mx-auto" style={{ fontSize: '20px', lineHeight: '1.6' }}>
+                Histórias reais de quem eliminou gargalos no atendimento, automatizou os pedidos e transformou a gestão do próprio negócio.
               </p>
             </div>
 
-            <div
-              className="grid items-stretch grid-flow-col auto-cols-[90%] snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:thin] min-[771px]:w-full min-[771px]:grid-flow-row min-[771px]:auto-cols-auto min-[771px]:grid-cols-3 min-[771px]:gap-8 min-[771px]:overflow-visible min-[771px]:pb-0"
-              role="region"
-              aria-label="Cases de sucesso do Dominus Food"
-              tabIndex={0}
-            >
-              {foodVideoCases.map((caseItem, index) => (
-                  <button
+            {/* Container com largura exata ajustada por breakpoints */}
+            <div className="mx-auto w-full min-[426px]:w-[clamp(70%,calc(70%+((100vw-426px)*30/345)),100%)] min-[771px]:w-[80%]">
+              <div
+                className="grid items-stretch grid-flow-col auto-cols-[90%] min-[771px]:grid-flow-row min-[771px]:grid-cols-3 min-[771px]:auto-rows-fr snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-4 [scrollbar-width:thin] min-[771px]:w-full min-[771px]:gap-8 min-[771px]:overflow-visible min-[771px]:pb-0"
+                role="region"
+                aria-label="Cases de sucesso do Dominus Food"
+                tabIndex={0}
+              >
+                {foodVideoCases.map((caseItem) => (
+                  <div
                     key={caseItem.id}
-                    type="button"
-                    onClick={() => setActiveFoodVideo(caseItem)}
-                    aria-label={`Assistir case da ${caseItem.cliente}`}
-                    className={`success-story-card group relative flex h-full flex-col items-stretch aspect-[9/16] snap-start overflow-hidden rounded-3xl border border-[#FC4242]/70 bg-black text-left shadow-2xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242] focus-visible:ring-offset-4 ${
-                      index === 0
-                        ? "min-[771px]:justify-self-end"
-                        : index === 1
-                          ? "min-[771px]:justify-self-center"
-                          : "min-[771px]:justify-self-start"
-                    }`}
+                    className="group relative flex h-full flex-col justify-between rounded-3xl transition-all duration-300 hover:-translate-y-1"
                   >
-                    <img
-                      src={`https://i.ytimg.com/vi/${caseItem.videoId}/hqdefault.jpg`}
-                      alt={`Thumbnail do case ${caseItem.cliente}`}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" aria-hidden="true" />
-                    <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-                      <span className="flex size-14 items-center justify-center rounded-full border-2 border-white/80 bg-black/50 text-white shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-110 sm:size-16">
-                        <Play size={25} className="translate-x-0.5 fill-current" />
-                      </span>
-                    </div>
+                    {/* Efeito de brilho/glow vermelho ao passar o mouse */}
                     <div
-                      ref={(element) => {
-                        successStoryContentRefs.current[index] = element;
-                      }}
-                      style={
-                        isSuccessStoriesDesktop && successStoryContentHeight !== null
-                          ? { minHeight: `${successStoryContentHeight}px` }
-                          : undefined
-                      }
-                      className="absolute inset-x-0 bottom-0 flex flex-col items-start justify-start p-5 text-white sm:p-6"
-                    >
-                      <h4 className="font-display text-2xl font-extrabold sm:text-3xl">{caseItem.cliente}</h4>
-                      <p className="mt-2 text-base leading-relaxed text-white/85 sm:text-lg">{caseItem.texto}</p>
+                      className="pointer-events-none absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl -z-10"
+                      style={{ backgroundColor: "rgba(252, 66, 66, 0.16)" }}
+                      aria-hidden="true"
+                    />
+
+                    {/* 1. EM CIMA: Balão de Fala (Altura igualada sincronizada) */}
+                    <div className="relative mb-0 flex flex-1 flex-col justify-between rounded-2xl border border-[#FC4242] bg-card/95 backdrop-blur-xs p-5 sm:p-6 shadow-sm transition-colors duration-300">
+                      {/* Pontinha geométrica do balão de fala virada para baixo */}
+                      <div
+                        className="absolute -bottom-2.5 left-8 size-5 rotate-45 border-r border-b border-[#FC4242] bg-card transition-colors"
+                        aria-hidden="true"
+                      />
+
+                      {/* Depoimento (Itálico) */}
+                      <blockquote className="fluid-body text-foreground/90 font-medium italic leading-relaxed pt-1 mb-4">
+                        “{caseItem.texto}”
+                      </blockquote>
+
+                      {/* Nome da Empresa (Alinhado à esquerda) */}
+                      <div className="mt-auto text-left">
+                        <h4 className="font-display fluid-h4 font-bold text-foreground leading-tight">
+                          {caseItem.cliente}
+                        </h4>
+                      </div>
                     </div>
-                  </button>
-              ))}
+
+                    {/* 2. EMBAIXO: Thumbnail do Vídeo */}
+                    <div className="relative mt-6 w-full aspect-[9/16] rounded-2xl overflow-hidden bg-black shadow-sm border border-border/80 transition-colors duration-300 group-hover:border-[#FC4242]/60 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setActiveFoodVideo(caseItem)}
+                        aria-label={`Assistir case da ${caseItem.cliente}`}
+                        className="group/play relative w-full h-full block cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242] focus-visible:ring-offset-2"
+                      >
+                        <img
+                          src={`https://i.ytimg.com/vi/${caseItem.videoId}/hqdefault.jpg`}
+                          alt={`Thumbnail do case ${caseItem.cliente}`}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" aria-hidden="true" />
+                        <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+                          <div className="size-14 sm:size-16 rounded-full bg-black/30 border-2 border-white text-white flex items-center justify-center shadow-lg transition-transform duration-200 group-hover/play:scale-[1.08] backdrop-blur-[2px]">
+                            <Play size={24} className="fill-white text-white translate-x-0.5" />
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -1067,29 +1114,30 @@ function DominusFoodPage() {
         {/* ─── 8. COMPARATIVO: OUTROS SISTEMAS X DOMINUS FOOD ─── */}
         <section
           id="comparativo-dominus-food"
-          className="order-2 w-full border-t border-border bg-white py-16 sm:py-24"
+          className="order-2 w-full border-t border-border bg-white"
         >
           <div className="landing-page-container">
-            <div className="mx-auto mb-12 max-w-4xl text-center sm:mb-16">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#FC4242]/10 px-4 py-1.5 fluid-secondary font-bold text-[#FC4242] sm:mb-4">
+            <div className="section-intro mx-auto max-w-4xl text-center">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242] bg-[#FC4242]/10 px-4 py-1.5 text-[#FC4242] mb-5 sm:mb-6">
                 <Layers size={13} aria-hidden="true" />
-                <span>COMPARAÇÃO NA PRÁTICA</span>
+                <span className="fluid-caption font-bold uppercase tracking-wider">COMPARAÇÃO NA PRÁTICA</span>
               </div>
               <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
-                Outros sistemas <span className="text-[#FC4242]">X</span> Dominus Food
+                Outros sistemas <span className="text-foreground">X</span> Dominus Food
               </h2>
-              <p className="mx-auto mt-3.5 max-w-3xl fluid-body leading-relaxed text-muted-foreground">
+              <p className="mx-auto mt-3.5 max-w-3xl fluid-body-lg leading-relaxed text-muted-foreground">
                 Mais do que olhar o preço, entenda como cada escolha organiza a rotina do seu boteco
                 — do pedido à gestão.
               </p>
             </div>
 
             <div className="w-full grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
-              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-subtle/45 shadow-sm">
+              {/* Card Esquerdo: Outros Sistemas */}
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border-[5px_1px_1px_1px] border-t-[#4A4A4A] border-r-border border-b-border border-l-border bg-surface-subtle/45 shadow-sm">
                 <div className="border-b border-border bg-white/70 p-6 sm:p-8">
                   <div className="flex items-center gap-4">
-                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-[#FC4242]/15 bg-[#FC4242]/8 text-[#FC4242]">
-                      <X size={23} strokeWidth={2.25} aria-hidden="true" />
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-border bg-muted text-foreground">
+                      <Laptop size={23} strokeWidth={2.25} aria-hidden="true" />
                     </span>
                     <div>
                       <p className="fluid-caption font-bold uppercase tracking-wider text-muted-foreground">
@@ -1100,10 +1148,6 @@ function DominusFoodPage() {
                       </h3>
                     </div>
                   </div>
-                  <p className="mt-5 fluid-secondary leading-relaxed text-muted-foreground">
-                    Quando as ferramentas não trabalham juntas, a equipe precisa preencher as
-                    lacunas no dia a dia.
-                  </p>
                 </div>
 
                 <ul className="flex flex-1 flex-col p-4 sm:p-5">
@@ -1113,30 +1157,31 @@ function DominusFoodPage() {
                       className="flex gap-3 border-b border-border px-2 py-4 first:pt-2 last:border-b-0 last:pb-2 sm:gap-4 sm:px-3"
                     >
                       <span
-                        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#FC4242]/10 text-[#FC4242]"
+                        className="flex size-7 shrink-0 self-center items-center justify-center rounded-full bg-muted text-foreground"
                         aria-hidden="true"
                       >
                         <X size={15} strokeWidth={2.5} />
                       </span>
                       <div className="min-w-0">
-                        <p className="fluid-body font-bold leading-snug text-foreground">
-                          {item.titulo}
-                        </p>
-                        <p className="mt-1 fluid-secondary leading-relaxed text-muted-foreground">
+                        <p className="fluid-secondary leading-relaxed text-muted-foreground">
                           {item.descricao}
                         </p>
                       </div>
                     </li>
                   ))}
                 </ul>
+                <p className="border-t border-border px-6 py-5 fluid-secondary leading-relaxed text-muted-foreground sm:px-8">
+                  Quando as ferramentas não trabalham juntas, a equipe precisa preencher as lacunas no dia a dia.
+                </p>
               </article>
 
-              <article className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-[#FC4242] bg-white shadow-md">
+              {/* Card Direito: Dominus Food */}
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border-[5px_1px_1px_1px] border-t-[#FC4242] border-r-[#FC4242]/40 border-b-[#FC4242] border-l-[#FC4242]/40 bg-white shadow-md">
                 <div className="border-b border-[#FC4242]/15 bg-[#FC4242]/5 p-6 sm:p-8">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#FC4242] text-white shadow-sm">
-                        <ShieldCheck size={24} strokeWidth={2.25} aria-hidden="true" />
+                        <img src={foodLogo} alt="" className="size-8 object-contain" aria-hidden="true" />
                       </span>
                       <div>
                         <p className="fluid-caption font-bold uppercase tracking-wider text-[#FC4242]">
@@ -1147,14 +1192,7 @@ function DominusFoodPage() {
                         </h3>
                       </div>
                     </div>
-                    <span className="rounded-full border border-[#FC4242]/20 bg-white px-3 py-1.5 fluid-caption font-bold text-[#FC4242] shadow-sm">
-                      Gestão integrada
-                    </span>
                   </div>
-                  <p className="mt-5 fluid-secondary leading-relaxed text-muted-foreground">
-                    Atendimento, cozinha, estoque, caixa e canais de venda reunidos para dar mais
-                    clareza à operação.
-                  </p>
                 </div>
 
                 <ul className="flex flex-1 flex-col p-4 sm:p-5">
@@ -1163,28 +1201,28 @@ function DominusFoodPage() {
                       key={item.titulo}
                       className="flex gap-3 border-b border-[#FC4242]/10 px-2 py-4 first:pt-2 last:border-b-0 last:pb-2 sm:gap-4 sm:px-3"
                     >
-                      <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-[#63B628]/10 text-[#63B628]">
+                      <span className="flex size-7 shrink-0 self-center items-center justify-center rounded-full bg-[#FC4242]/10 text-[#FC4242]">
                         <CheckCircle2 size={17} strokeWidth={2.5} aria-hidden="true" />
                       </span>
                       <div className="min-w-0">
-                        <p className="fluid-body font-bold leading-snug text-foreground">
-                          {item.titulo}
-                        </p>
-                        <p className="mt-1 fluid-secondary leading-relaxed text-muted-foreground">
+                        <p className="fluid-secondary leading-relaxed text-muted-foreground">
                           {item.descricao}
                         </p>
                       </div>
                     </li>
                   ))}
                 </ul>
+                <p className="border-t border-[#FC4242] px-6 py-5 fluid-secondary leading-relaxed text-[#FC4242] sm:px-8">
+                  Atendimento, cozinha, estoque, caixa e canais de venda reunidos para dar mais clareza à operação.
+                </p>
               </article>
             </div>
 
-            <div className="mt-10 text-center sm:mt-12">
+            <div className="mt-10 flex justify-center sm:mt-12">
               <button
                 type="button"
                 onClick={scrollToLeadForm}
-                className="inline-flex min-h-14 w-full max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2 sm:w-auto sm:px-8"
+                className="inline-flex min-h-14 w-[70%] max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2"
               >
                 <span className="text-center">Quero transformar meu boteco agora</span>
                 <ArrowRight size={16} className="shrink-0" aria-hidden="true" />
@@ -1192,6 +1230,150 @@ function DominusFoodPage() {
             </div>
           </div>
         </section>
+
+        {/* ─── VÍDEO / CONHEÇA O SISTEMA ─── */}
+        <section
+          id="video-dominus-food"
+          className="order-2 w-full border-y border-[#FC4242]/60 bg-[linear-gradient(135deg,#30090c_0%,#481014_38%,#2d090d_68%,#190507_100%)] py-12 shadow-xl sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-12 xl:px-16"
+          aria-labelledby="video-dominus-food-title"
+          style={{
+            paddingLeft: "10%",
+            paddingRight: "10%",
+          }}
+        >
+          <div
+            className="mx-auto grid max-w-full grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-10"
+            style={{
+              marginLeft: "0px",
+              marginRight: "0px",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setIsIntroVideoOpen(true)}
+              aria-label="Reproduzir vídeo de apresentação do Dominus Food"
+              className="group relative block w-full max-w-[420px] mx-auto lg:max-w-none min-w-0 overflow-hidden rounded-2xl border border-neutral-700 bg-black text-left shadow-xl transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#FC4242]/50"
+            >
+              <span className="relative block aspect-[4/3] w-full">
+                <img
+                  src="https://img.youtube.com/vi/OJs7BZ087j4/hqdefault.jpg"
+                  alt="Prévia do vídeo de apresentação do Dominus Food"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/35" aria-hidden="true"></span>
+                <span className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white/90 bg-black/70 text-white shadow-2xl transition-transform duration-300 group-hover:scale-110 sm:size-20" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play ml-1 fill-current sm:size-8" aria-hidden="true">
+                    <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path>
+                  </svg>
+                </span>
+              </span>
+            </button>
+
+            <div className="min-w-0 text-center lg:text-left">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242]/25 bg-[#FC4242]/10 px-4 py-1.5 mb-5 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play fill-[#FC4242] text-[#FC4242]" aria-hidden="true">
+                  <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path>
+                </svg>
+                <span className="fluid-caption font-bold uppercase tracking-wider text-[#FC4242]">Conheça o sistema</span>
+              </div>
+              <h2 id="video-dominus-food-title" className="font-display fluid-h2 font-extrabold tracking-tight text-white">
+                Veja o Dominus Food em ação
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl fluid-body leading-relaxed text-white/75 lg:mx-0">
+                Descubra como organizar o atendimento, acompanhar os pedidos e ter mais controle da rotina do seu boteco.
+              </p>
+
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 text-left">
+                <div className="flex items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#FC4242]/15 text-[#FC4242]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table-properties" aria-hidden="true">
+                      <path d="M15 3v18"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M21 9H3"></path><path d="M21 15H3"></path>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold text-white">Mesas e comandas digitais</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#FC4242]/15 text-[#FC4242]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square" aria-hidden="true">
+                      <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold text-white">Comunicação salão–cozinha</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#FC4242]/15 text-[#FC4242]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wifi" aria-hidden="true">
+                      <path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold text-white">PDV rápido e operação offline</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#FC4242]/15 text-[#FC4242]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes" aria-hidden="true">
+                      <path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"></path>
+                      <path d="m7 16.5-4.74-2.85"></path><path d="m7 16.5 5-3"></path><path d="M7 16.5v5.17"></path>
+                      <path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"></path>
+                      <path d="m17 16.5-5-3"></path><path d="m17 16.5 4.74-2.85"></path><path d="M17 16.5v5.17"></path>
+                      <path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"></path>
+                      <path d="M12 8 7.26 5.15"></path><path d="m12 8 4.74-2.85"></path><path d="M12 13.5V8"></path>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold text-white">Estoque, compras e CMV</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={scrollToLeadForm}
+                className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#63B628] px-6 py-3 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#63B628]/60 focus-visible:ring-offset-2 sm:w-auto"
+              >
+                Falar com especialista
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true">
+                  <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {isIntroVideoOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Vídeo de apresentação do Dominus Food"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm sm:p-8"
+            onClick={() => setIsIntroVideoOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-5xl overflow-hidden rounded-2xl border-[6px] border-neutral-900 bg-black shadow-[0_24px_100px_rgba(0,0,0,0.65)] sm:rounded-3xl sm:border-8"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setIsIntroVideoOpen(false)}
+                aria-label="Fechar vídeo"
+                className="absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-full border border-white/25 bg-black/75 text-white transition-colors hover:bg-[#FC4242] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <X size={20} />
+              </button>
+              <div className="aspect-video w-full">
+                <iframe
+                  src="https://www.youtube.com/embed/OJs7BZ087j4?autoplay=1&rel=0&playsinline=1"
+                  title="Apresentação do Dominus Food"
+                  className="h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeFoodVideo && (
           <div
@@ -1227,7 +1409,7 @@ function DominusFoodPage() {
         {/* ─── 8. SEÇÃO COMERCIAL DE PLANOS E INVESTIMENTOS (Requisito Principal) ─── */}
         <section
           id="planos-dominus-food"
-          className="order-6 relative w-full overflow-hidden py-16 sm:py-24 lg:py-28 border-t border-[#FC4242]/20"
+          className="order-6 relative w-full overflow-hidden border-t border-[#FC4242]/20"
           style={{
             background:
               "radial-gradient(ellipse 72% 68% at 84% 28%, rgba(252,66,66,0.34) 0%, rgba(168,30,35,0.18) 38%, transparent 68%), radial-gradient(ellipse 58% 62% at 10% 88%, rgba(221,51,55,0.24) 0%, transparent 65%), linear-gradient(135deg, #30090c 0%, #481014 38%, #2d090d 68%, #190507 100%)",
@@ -1235,10 +1417,10 @@ function DominusFoodPage() {
         >
           {/* Fundo luminoso */}
           <div className="landing-page-container relative z-10">
-            <div className="max-w-7xl mx-auto text-center mb-10 sm:mb-14">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#FC4242]/40 bg-[#FC4242]/15 px-4 py-1.5 mb-4">
+            <div className="section-intro mx-auto max-w-7xl text-center">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-[#FC4242]/40 bg-[#FC4242]/15 px-4 py-1.5 mb-5 sm:mb-6">
                 <Star size={13} className="text-[#FC4242]" aria-hidden="true" />
-                <span className="fluid-secondary font-bold uppercase tracking-wider text-[#FC4242]">
+                <span className="fluid-caption font-bold uppercase tracking-wider text-[#FC4242]">
                   Investimento Transparente
                 </span>
               </div>
@@ -1257,22 +1439,20 @@ function DominusFoodPage() {
                 <button
                   type="button"
                   onClick={() => setBillingCycle("anual")}
-                  className={`rounded-lg px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all ${
-                    billingCycle === "anual"
-                      ? "bg-[#FC4242] text-white shadow-md font-bold"
-                      : "text-white/70 hover:text-white"
-                  }`}
+                  className={`rounded-lg px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all ${billingCycle === "anual"
+                    ? "bg-[#FC4242] text-white shadow-md font-bold"
+                    : "text-white/70 hover:text-white"
+                    }`}
                 >
                   Anual (Desconto especial)
                 </button>
                 <button
                   type="button"
                   onClick={() => setBillingCycle("mensal")}
-                  className={`rounded-lg px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all ${
-                    billingCycle === "mensal"
-                      ? "bg-[#FC4242] text-white shadow-md font-bold"
-                      : "text-white/70 hover:text-white"
-                  }`}
+                  className={`rounded-lg px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all ${billingCycle === "mensal"
+                    ? "bg-[#FC4242] text-white shadow-md font-bold"
+                    : "text-white/70 hover:text-white"
+                    }`}
                 >
                   Mensal
                 </button>
@@ -1288,111 +1468,180 @@ function DominusFoodPage() {
               style={{ scrollbarWidth: "thin" }}
             >
               <div className="flex w-max gap-5 pr-5 sm:gap-6 sm:pr-6 lg:w-full lg:pr-0 lg:grid lg:grid-cols-4">
-              {planosFood.map((plano) => {
-                const preco = billingCycle === "anual" ? plano.anual : plano.mensal;
-                return (
-                  <div
-                    key={plano.id}
-                    className="group relative flex w-[min(20rem,calc(100vw-3rem))] shrink-0 snap-start flex-col justify-between rounded-2xl border border-white/15 bg-black/40 p-6 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-[#FC4242] hover:bg-[#2d0909]/90 hover:shadow-2xl hover:ring-2 hover:ring-[#FC4242]/50 lg:w-auto"
-                  >
-
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-display font-extrabold text-lg text-white">
-                          {plano.nome}
-                        </h3>
-                      </div>
-
-                      <p className="text-xs text-white/60 min-h-[32px] leading-snug mb-4">
-                        {plano.descricao}
-                      </p>
-
-                      {/* Bloco de Preço */}
-                      <div className="py-4 border-y border-white/10 mb-4">
-                        <div className="flex items-baseline gap-1 text-white">
-                          {preco !== "Consulte" ? (
-                            <>
-                              <span className="text-xs font-semibold text-white/70">R$</span>
-                              <span className="font-display text-3xl font-extrabold tracking-tight">
-                                {preco}
-                              </span>
-                              <span className="text-xs text-white/60 font-medium">/mês</span>
-                            </>
-                          ) : (
-                            <span className="font-display text-2xl font-extrabold text-white">
-                              Sob Consulta
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Lista de Recursos */}
-                      <ul className="flex flex-col gap-2 mb-6 text-xs text-white/80">
-                        {[plano.faturamento, plano.pdvs].map((item) => (
-                          <li key={item} className="flex items-start gap-2">
-                            <CheckCircle2
-                              size={13}
-                              className="mt-0.5 shrink-0 text-[#FC4242]"
-                              aria-hidden="true"
-                            />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <Link
-                      to="/planos"
-                      search={{ segmento: "food" }}
-                      className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-bold text-white transition-all duration-200 hover:bg-[#FC4242] group-hover:border-transparent group-hover:bg-[#FC4242] group-hover:shadow-md group-hover:hover:bg-[#FC4242] group-hover:hover:brightness-110"
+                {planosFood.map((plano) => {
+                  const preco = billingCycle === "anual" ? plano.anual : plano.mensal;
+                  return (
+                    <div
+                      key={plano.id}
+                      className="group relative flex w-[min(20rem,calc(100vw-3rem))] shrink-0 snap-start flex-col justify-between rounded-2xl border border-white/15 bg-black/40 p-6 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-[#FC4242] hover:bg-[#2d0909]/90 hover:shadow-2xl hover:ring-2 hover:ring-[#FC4242]/50 lg:w-auto"
                     >
-                      <span>Ver detalhes deste plano</span>
-                      <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                );
-              })}
+
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-display font-extrabold text-lg text-white">
+                            {plano.nome}
+                          </h3>
+                        </div>
+
+                        <p className="text-xs text-white/60 min-h-[32px] leading-snug mb-4">
+                          {plano.descricao}
+                        </p>
+
+                        {/* Bloco de Preço */}
+                        <div className="py-4 border-y border-white/10 mb-4">
+                          <div className="flex items-baseline gap-1 text-white">
+                            {preco !== "Consulte" ? (
+                              <>
+                                <span className="text-xs font-semibold text-white/70">R$</span>
+                                <span className="font-display text-3xl font-extrabold tracking-tight">
+                                  {preco}
+                                </span>
+                                <span className="text-xs text-white/60 font-medium">/mês</span>
+                              </>
+                            ) : (
+                              <span className="font-display text-2xl font-extrabold text-white">
+                                Sob Consulta
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Lista de Recursos */}
+                        <ul className="flex flex-col gap-2 mb-6 text-xs text-white/80">
+                          {[plano.faturamento, plano.pdvs].map((item) => (
+                            <li key={item} className="flex items-start gap-2">
+                              <CheckCircle2
+                                size={13}
+                                className="mt-0.5 shrink-0 text-[#FC4242]"
+                                aria-hidden="true"
+                              />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <Link
+                        to="/planos"
+                        search={{ segmento: "food" }}
+                        className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-white/25 bg-white/10 text-xs font-bold text-white transition-all duration-200 hover:bg-[#FC4242] group-hover:border-transparent group-hover:bg-[#FC4242] group-hover:shadow-md group-hover:hover:bg-[#FC4242] group-hover:hover:brightness-110"
+                      >
+                        <span>Ver detalhes deste plano</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
           </div>
         </section>
 
+        {/* ─── 11. COMEÇAR COM DOMINUS É RAPIDO E FACIL ─── */}
+        <section
+          id="comecar-dominus-food"
+          className="order-7 w-full border-t border-border bg-white"
+          aria-labelledby="comecar-dominus-food-title"
+        >
+          <div className="landing-page-container">
+            <div className="mx-auto max-w-6xl text-center">
+              <div className="section-eyebrow inline-flex items-center gap-2 rounded-full bg-[#FC4242]/5 px-4 py-1.5 text-[#FC4242] mb-5 sm:mb-6">
+                <span className="size-2 rounded-full bg-[#FC4242]" aria-hidden="true" />
+                <span className="fluid-caption font-bold uppercase tracking-wider">SIMPLES, RÁPIDO E ACOMPANHADO</span>
+              </div>
+              <h2
+                id="comecar-dominus-food-title"
+                className="font-display fluid-h2 font-extrabold tracking-tight text-foreground"
+              >
+                Começar com o Dominus é rápido e sem complicação
+              </h2>
+              <p className="mt-2 fluid-body leading-relaxed text-muted-foreground">
+                Três passos para conhecer o sistema e começar a transformar a rotina do seu boteco.
+              </p>
+
+              <div className="mt-10 grid grid-cols-1 gap-6 sm:mt-11 md:grid-cols-3 md:gap-7">
+                {[
+                  {
+                    icon: CalendarDays,
+                    label: "PASSO 1",
+                    description: "Agende sua demonstração com nossa equipe.",
+                  },
+                  {
+                    icon: Headset,
+                    label: "PASSO 2",
+                    description: "Nossa equipe apresentará o sistema completo para você.",
+                  },
+                  {
+                    icon: MonitorX,
+                    label: "PASSO 3",
+                    description: "Comece a usar o sistema para um boteco mais completo.",
+                  },
+                ].map(({ icon: Icon, label, description }) => (
+                  <article
+                    key={label}
+                    className="flex min-h-[270px] flex-col items-center rounded-xl border border-gray-200 border-t-4 border-t-[#FC4242] bg-white px-5 py-8 text-center shadow-[0_4px_0_rgba(23,32,40,0.08)] sm:px-7"
+                  >
+                    <Icon size={52} strokeWidth={1.8} className="text-[#FC4242]" aria-hidden="true" />
+                    <p className="mt-5 text-base font-bold text-foreground">
+                      {label}
+                    </p>
+                    <span className="mt-2 h-1 w-10 rounded-full bg-[#FC4242]" aria-hidden="true" />
+                    <p className="mt-4 fluid-body font-bold leading-relaxed text-foreground">
+                      {description}
+                    </p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-10 flex justify-center sm:mt-12">
+                <button
+                  type="button"
+                  onClick={() => setBookingOpen(true)}
+                  className="inline-flex min-h-14 w-[70%] max-w-full items-center justify-center gap-2 rounded-xl bg-[#FC4242] px-6 py-3.5 font-bold fluid-body text-white shadow-md transition-all duration-300 hover:bg-[#e53636] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FC4242]/60 focus-visible:ring-offset-2"
+                >
+                  AGENDAR DEMONSTRAÇÃO <ArrowRight size={17} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ─── 9. FAQ COMPLETO COM TODAS AS 12 PERGUNTAS ─── */}
         <section
           id="faq-dominus-food"
-          className="order-7 w-full py-16 sm:py-24 bg-background border-t border-border"
+          className="order-7 w-full bg-background border-t border-border"
         >
           <div className="landing-page-container">
             <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
-              <div className="text-center lg:text-left">
-              <div
-                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 fluid-secondary font-bold mb-3 sm:mb-4"
-                style={{ backgroundColor: "#FC42420D", color: "#FC4242" }}
-              >
-                <HelpCircle size={13} aria-hidden="true" />
-                <span>Tire Suas Dúvidas</span>
+              <div className="section-intro text-center lg:text-left">
+                <div
+                  className="section-eyebrow inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-5 sm:mb-6"
+                  style={{ backgroundColor: "#FC42420D", color: "#FC4242" }}
+                >
+                  <HelpCircle size={13} aria-hidden="true" />
+                  <span className="fluid-caption font-bold uppercase tracking-wider">Tire Suas Dúvidas</span>
+                </div>
+                <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
+                  Perguntas frequentes de gestores de <span className="text-[#FC4242]">boteco</span>
+                </h2>
+                <p className="mx-auto mt-3.5 max-w-4xl fluid-body leading-relaxed text-muted-foreground lg:mx-0">
+                  Respostas diretas e responsáveis sobre funcionalidades, funcionamento offline,
+                  equipamentos, maquininhas, preços e suporte.
+                </p>
               </div>
-              <h2 className="font-display fluid-h2 font-extrabold tracking-tight text-foreground">
-                Perguntas frequentes de gestores de <span className="text-[#FC4242]">boteco</span>
-              </h2>
-              <p className="mx-auto mt-3.5 max-w-4xl fluid-body leading-relaxed text-muted-foreground lg:mx-0">
-                Respostas diretas e responsáveis sobre funcionalidades, funcionamento offline,
-                equipamentos, maquininhas, preços e suporte.
-              </p>
-            </div>
 
               <div className="flex max-w-3xl flex-col gap-4">
-              {faqs.filter((faq) => ["faq-1", "faq-11", "faq-5", "faq-9"].includes(faq.id)).map((faq, idx) => (
-                <FaqAccordionItem
-                  key={faq.id}
-                  pergunta={faq.pergunta.replace(/^\d+\.\s*/, "")}
-                  resposta={faq.resposta}
-                  isOpen={activeFaqIndex === idx}
-                  onToggle={() => toggleFaq(idx)}
-                />
-              ))}
-            </div>
+                {faqs.filter((faq) => ["faq-1", "faq-11", "faq-5", "faq-9"].includes(faq.id)).map((faq, idx) => (
+                  <FaqAccordionItem
+                    key={faq.id}
+                    pergunta={faq.pergunta.replace(/^\d+\.\s*/, "")}
+                    resposta={faq.resposta}
+                    isOpen={activeFaqIndex === idx}
+                    onToggle={() => toggleFaq(idx)}
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="mt-10 text-center">
@@ -1408,6 +1657,199 @@ function DominusFoodPage() {
                 </a>
               </p>
             </div>
+          </div>
+        </section>
+
+        <section
+          id="blog-conteudos"
+          className="order-8 w-full overflow-hidden border-t border-border bg-white py-16 lg:py-24"
+        >
+          <div className="landing-page-container">
+            <div className="mb-12 flex w-full flex-col justify-between gap-6 md:flex-row md:items-end">
+              <div className="w-full">
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#FC4242]/20 bg-[#FC4242]/5 px-4 py-1.5 fluid-caption font-bold uppercase tracking-wider text-[#FC4242] sm:mb-6">
+                  <BookOpen size={13} className="text-[#FC4242]" aria-hidden="true" />
+                  <span>Blog &amp; Conteúdos Estratégicos</span>
+                </div>
+                <h2 className="font-display fluid-h2 font-bold tracking-tight text-foreground">
+                  Fique por dentro: dicas para acelerar seu comércio
+                </h2>
+                <p className="mt-2 fluid-body-lg text-muted-foreground">
+                  Artigos práticos de gestão, finanças e tecnologia para o seu dia a dia.
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-4 self-start md:self-auto">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      blogCarouselApi?.scrollPrev();
+                    }}
+                    className="size-9 rounded-full border-border text-foreground hover:border-[#FC4242]/40 hover:bg-[#FC4242]/5"
+                    aria-label="Artigo anterior"
+                  >
+                    <ChevronLeft size={18} aria-hidden="true" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      blogCarouselApi?.scrollNext();
+                    }}
+                    className="size-9 rounded-full border-border text-foreground hover:border-[#FC4242]/40 hover:bg-[#FC4242]/5"
+                    aria-label="Próximo artigo"
+                  >
+                    <ChevronRight size={18} aria-hidden="true" />
+                  </Button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSpecialistOpen(true)}
+                  className="ml-2 inline-flex cursor-pointer items-center gap-1.5 fluid-btn font-semibold text-[#FC4242] hover:underline"
+                >
+                  <span>Falar com especialista</span>
+                  <ArrowRight size={16} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            <Carousel
+              setApi={setBlogCarouselApi}
+              opts={{ align: "start", loop: true }}
+              className="w-full"
+              aria-label="Artigos do blog Waybit"
+            >
+              <CarouselContent className="-ml-5 py-2 lg:-ml-6">
+                {[
+                  {
+                    id: "blog-1",
+                    title: "A importância da alimentação inclusiva em restaurantes",
+                    category: "Gastronomia / Food",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "4 min de leitura",
+                    date: "14 de Maio, 2024",
+                    author: "Equipe Waybit Food",
+                    image: blogFoodInclusionImage,
+                    imageAlt: "A importância da alimentação inclusiva em restaurantes",
+                    summary: "A alimentação inclusiva é essencial para atender clientes com restrições alimentares, alergias e diferentes escolhas de vida, fidelizando novos públicos e elevando a experiência do seu restaurante.",
+                  },
+                  {
+                    id: "blog-2",
+                    title: "A nova era dos restaurantes híbridos: por que quem não se adaptar agora vai ficar para trás",
+                    category: "Gestão & Inovação",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "6 min de leitura",
+                    date: "18 de Junho, 2024",
+                    author: "Equipe Waybit Inovação",
+                    image: blogRestaurantHybridImage,
+                    imageAlt: "A nova era dos restaurantes híbridos",
+                    summary: "O setor de alimentação passou por mudanças históricas. Descubra o modelo de restaurante híbrido que conecta salão, delivery, autoatendimento e pagamentos digitais em tempo real.",
+                  },
+                  {
+                    id: "blog-3",
+                    title: "A Nova Regra de Guarda de XMLs das Notas Fiscais: O Que Você Precisa Saber",
+                    category: "Fiscal & Contábil",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "5 min de leitura",
+                    date: "02 de Julho, 2024",
+                    author: "Setor Fiscal Waybit",
+                    image: blogXmlStorageImage,
+                    imageAlt: "A Nova Regra de Guarda de XMLs das Notas Fiscais",
+                    summary: "Nova diretriz da Confaz estabelece prazo obrigatório de 11 anos para retenção dos arquivos XML de NF-e e NFC-e. Saiba como manter sua empresa blindada contra autuações.",
+                  },
+                  {
+                    id: "blog-4",
+                    title: "Alterações do Decreto Nº 49086: Impactos e Implicações na NFC-e",
+                    category: "Legislação & Normas",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "5 min de leitura",
+                    date: "25 de Maio, 2024",
+                    author: "Setor Fiscal Waybit",
+                    image: blogNfceDecreeImage,
+                    imageAlt: "Alterações do Decreto Nº 49086",
+                    summary: "No Rio de Janeiro, o Decreto nº 49.086 reduziu o teto de emissão de NFC-e sem identificação do consumidor de R$ 10.000 para R$ 2.000. Veja como evitar a Rejeição 751 no seu caixa.",
+                  },
+                  {
+                    id: "blog-5",
+                    title: "5 Erros que estão fazendo seu delivery vender menos",
+                    category: "Delivery & Gestão",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "5 min de leitura",
+                    date: "10 de Agosto, 2024",
+                    author: "Equipe Waybit Food",
+                    image: blogDeliveryMistakesImage,
+                    imageAlt: "5 Erros que estão fazendo seu delivery vender menos",
+                    summary: "Vende bastante mas não vê o lucro no fim do mês? Conheça os 5 erros de precificação, controle de estoque e desorganização que drenam a rentabilidade do seu delivery.",
+                  },
+                  {
+                    id: "blog-6",
+                    title: "5 INTEGRAÇÕES DO DOMINUS QUE VOCÊ PRECISA CONHECER!",
+                    category: "Tecnologia & Integrações",
+                    categoryColor: "bg-[#FC4242]/10 text-[#FC4242] border-[#FC4242]/20",
+                    readTime: "6 min de leitura",
+                    date: "05 de Setembro, 2024",
+                    author: "Equipe de Produto Waybit",
+                    image: blogDominusIntegrationsImage,
+                    imageAlt: "5 INTEGRAÇÕES DO DOMINUS QUE VOCÊ PRECISA CONHECER",
+                    summary: "Descubra as integrações nativas do sistema Dominus com Pix Shipay, PicPay, TEF Linx, Boleto Asaas e iFood para transformar a velocidade do seu atendimento e caixa.",
+                  },
+                ].map((post) => (
+                  <CarouselItem
+                    key={post.id}
+                    className="basis-full pl-5 sm:basis-1/2 lg:basis-1/3 lg:pl-6"
+                  >
+                    <article
+                      className="group flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card/95 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-[#FC4242]/40 hover:shadow-xl"
+                    >
+                      <div>
+                        <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+                          <img
+                            src={post.image}
+                            alt={post.imageAlt}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                          <span
+                            className={`absolute left-3 top-3 rounded-full border px-2.5 py-1 fluid-caption font-semibold backdrop-blur-md ${post.categoryColor}`}
+                          >
+                            {post.category}
+                          </span>
+                        </div>
+                        <div className="w-full p-5 sm:p-6">
+                          <div className="mb-3 flex items-center gap-3 fluid-caption text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock size={12} aria-hidden="true" /> {post.readTime}
+                            </span>
+                            <span aria-hidden="true">•</span>
+                            <span>{post.date}</span>
+                          </div>
+                          <h3 className="line-clamp-2 font-display fluid-h3 leading-snug font-bold text-foreground transition-colors group-hover:text-[#FC4242]">
+                            {post.title}
+                          </h3>
+                          <p className="mt-2 line-clamp-3 fluid-secondary leading-relaxed text-muted-foreground">
+                            {post.summary}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex w-full items-center justify-between border-t border-border/80 px-5 pb-5 pt-3 sm:px-6 sm:pb-6">
+                        <span className="truncate fluid-caption font-medium text-muted-foreground">
+                          {post.author}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setSpecialistOpen(true)}
+                          className="flex cursor-pointer items-center gap-1 fluid-caption font-bold text-[#FC4242] transition-transform group-hover:translate-x-0.5"
+                        >
+                          Ler mais <ChevronRight size={14} aria-hidden="true" />
+                        </button>
+                      </div>
+                    </article>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </div>
         </section>
 
