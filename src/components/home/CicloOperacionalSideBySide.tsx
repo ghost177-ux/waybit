@@ -1,4 +1,5 @@
 import { MessageSquare, Rocket, Workflow } from "lucide-react";
+import diagCycleImage from "@/assets/Diag ciclo.png";
 
 export function CicloOperacionalSideBySide() {
   return (
@@ -24,7 +25,7 @@ export function CicloOperacionalSideBySide() {
           <div className="relative flex w-full max-w-[460px] sm:max-w-[480px] lg:max-w-[500px] aspect-square items-center justify-center">
             {/* Imagem Transparente Pura (Zero fundo, zero caixa branca, zero bordas) */}
             <img
-              src="/Diag-ciclo.png"
+              src={diagCycleImage}
               alt="Ciclo Operacional Waybit"
               className="size-full object-contain pointer-events-none select-none"
               loading="lazy"

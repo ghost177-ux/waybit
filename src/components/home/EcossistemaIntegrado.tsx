@@ -1,4 +1,5 @@
 import {
+import dominusLogo from "@/assets/Logo-dominus.png";
   Rocket,
   Check,
 } from "lucide-react";
@@ -453,7 +454,7 @@ export function EcossistemaIntegrado() {
                 {/* Logo Dominus perfeitamente centralizada */}
                 <div className="relative z-10 flex items-center justify-center h-10 w-full px-2">
                   <img
-                    src="/Logo-dominus.png"
+                    src={dominusLogo}
                     alt="Dominus"
                     className="max-h-full max-w-[120px] object-contain transition-transform duration-500 hover:scale-105"
                   />
